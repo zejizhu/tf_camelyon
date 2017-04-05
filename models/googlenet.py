@@ -1,4 +1,4 @@
-from .network import Network
+from models.lib import Network
 
 class GoogleNet(Network):
     def setup(self):
