@@ -22,7 +22,7 @@ class CamelyonData(Dataset):
   def num_examples_per_epoch(self):
     """Returns the number of examples in the data subset."""
     if self.subset == 'train':
-      return 3170
+      return 809032
     if self.subset == 'validation':
       return 10000
 

@@ -1,13 +1,8 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 
-if [ -z "$1" ]; then
-  echo "Usage: download_and_preprocess_flowers.sh [data dir]"
-  exit
-fi
-
 TOP_DIR="/home1/zhuzj/dataset/camelyon16_B2/"
-DIR_RAW_DATA="$TOP_DIR/raw/"
+DIR_RAW_DATA="$TOP_DIR/input_sample/*"
 FILE_PATH_LABEL="$TOP_DIR/labels.txt"
 
 # Create the output and temporary directories.
@@ -17,8 +12,8 @@ SCRATCH_DIR="${DATA_DIR}/raw-data"
 mkdir -p "${DATA_DIR}"
 mkdir -p "${SCRATCH_DIR}"
 # http://stackoverflow.com/questions/59895/getting-the-source-directory-of-a-bash-script-from-within
-WORK_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
+#WORK_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+WORK_DIR="./data/"
 # Download the flowers data.
 #DATA_URL="http://download.tensorflow.org/example_images/flower_photos.tgz"
 CURRENT_DIR=$(pwd)
@@ -39,7 +34,10 @@ VALIDATION_DIRECTORY="${SCRATCH_DIR}/validation"
 #tar xf ${DATA_DIR}/flower_photos.tgz
 rm -rf "${TRAIN_DIRECTORY}" "${VALIDATION_DIRECTORY}"
 mkdir -p "${TRAIN_DIRECTORY}"
-mv DIR_RAW_DATA "${TRAIN_DIRECTORY}"
+mv ${DIR_RAW_DATA} ${TRAIN_DIRECTORY}
+#printf $strs
+#mv "${DIR_RAW_DATA}" "${TRAIN_DIRECTORY}"
+#`$strs`
 
 # Generate a list of 5 labels: daisy, dandelion, roses, sunflowers, tulips
 #LABELS_FILE="${SCRATCH_DIR}/labels.txt"
@@ -53,7 +51,7 @@ while read LABEL; do
 
   # Move the first randomly selected 5000 images to the validation set.
   mkdir -p "${VALIDATION_DIR_FOR_LABEL}"
-  VALIDATION_IMAGES=$(ls -1 "${TRAIN_DIR_FOR_LABEL}" | shuf | head -5000)
+  VALIDATION_IMAGES=$(ls -1 "${TRAIN_DIR_FOR_LABEL}" | shuf | head -2000)
   for IMAGE in ${VALIDATION_IMAGES}; do
     mv -f "${TRAIN_DIRECTORY}/${LABEL}/${IMAGE}" "${VALIDATION_DIR_FOR_LABEL}"
   done
@@ -62,7 +60,7 @@ done < "${LABELS_FILE}"
 # Build the TFRecords version of the image data.
 cd "${CURRENT_DIR}"
 BUILD_SCRIPT="${WORK_DIR}/build_image_data.py"
-OUTPUT_DIRECTORY="${DATA_DIR}"
+OUTPUT_DIRECTORY="${DATA_DIR}/TFRecords/"
 python "${BUILD_SCRIPT}" \
   --train_directory="${TRAIN_DIRECTORY}" \
   --validation_directory="${VALIDATION_DIRECTORY}" \
