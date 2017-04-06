@@ -1,4 +1,0 @@
-[submodule "caffe-tensorflow"]
-	path = caffe-tensorflow
-	url = https://github.com/zejizhu/caffe-tensorflow.git
-	branch = master
