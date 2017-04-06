@@ -40,6 +40,16 @@ py_library(
 )
 
 py_library(
+    name = "camelyon_data",
+    srcs = [
+        "camelyon_data.py",
+    ],
+    deps = [
+        ":dataset",
+    ],
+)
+
+py_library(
     name = "image_processing",
     srcs = [
         "image_processing.py",
@@ -76,6 +86,17 @@ py_binary(
     ],
     deps = [
         ":flowers_data",
+        ":inception_eval",
+    ],
+)
+
+py_binary(
+    name = "camelyon_eval",
+    srcs = [
+        "camelyon_eval.py",
+    ],
+    deps = [
+        ":camelyon_data",
         ":inception_eval",
     ],
 )
@@ -120,6 +141,17 @@ py_binary(
     ],
     deps = [
         ":flowers_data",
+        ":inception_train",
+    ],
+)
+
+py_binary(
+    name = "camelyon_train",
+    srcs = [
+        "camelyon_train.py",
+    ],
+    deps = [
+        ":camelyon_data",
         ":inception_train",
     ],
 )
