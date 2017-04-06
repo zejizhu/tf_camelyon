@@ -24,7 +24,7 @@ class CamelyonData(Dataset):
     if self.subset == 'train':
       return 3170
     if self.subset == 'validation':
-      return 500
+      return 10000
 
   def download_message(self):
     """Instruction to download and extract the tarball from Flowers website."""

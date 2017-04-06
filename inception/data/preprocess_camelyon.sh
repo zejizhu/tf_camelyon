@@ -6,12 +6,13 @@ if [ -z "$1" ]; then
   exit
 fi
 
-TOP_DIR=/home1/zhuzj/dataset/camelyon16_B2/
-DIR_RAW_DATA=$TOP_DIR/raw
-FILE_PATH_LABEL=$TOP_DIR/labels.txt
+TOP_DIR="/home1/zhuzj/dataset/camelyon16_B2/"
+DIR_RAW_DATA="$TOP_DIR/raw/"
+FILE_PATH_LABEL="$TOP_DIR/labels.txt"
 
 # Create the output and temporary directories.
-DATA_DIR="${1%/}"
+#DATA_DIR="${1%/}"
+DATA_DIR="$TOP_DIR"
 SCRATCH_DIR="${DATA_DIR}/raw-data"
 mkdir -p "${DATA_DIR}"
 mkdir -p "${SCRATCH_DIR}"
@@ -66,4 +67,7 @@ python "${BUILD_SCRIPT}" \
   --train_directory="${TRAIN_DIRECTORY}" \
   --validation_directory="${VALIDATION_DIRECTORY}" \
   --output_directory="${OUTPUT_DIRECTORY}" \
-  --labels_file="${LABELS_FILE}"
+  --labels_file="${LABELS_FILE}" \
+  --train_shards=128 \
+  --validation_shards=32 \
+  --num_threads=8
