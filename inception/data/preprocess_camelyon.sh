@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-TOP_DIR="/home1/zhuzj/dataset/camelyon16_B2/"
+TOP_DIR="/home1/zhuzj/dataset/c16_test_B2/"
 DIR_RAW_DATA="$TOP_DIR/input_sample/*"
 FILE_PATH_LABEL="$TOP_DIR/labels.txt"
 
