@@ -1,7 +1,9 @@
 import os
 import sys
 import config as cfg
-#import inception
+path = cfg.config_path()
+sys.path.append(path.top_dir)
+import inception
 
 def train_init():
     path = cfg.config_path()
@@ -24,6 +26,9 @@ def train():
               %(TRAIN_DIR,DATA_DIR,EVA_DIR,param.fine_tune,param.init_learning_rate,param.input_queue_memory_factor)
     print(run_train)
     os.system(run_train)
+
+def eval():
+    return 0
 
 
 def main():

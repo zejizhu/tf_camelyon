@@ -23,9 +23,9 @@ class CamelyonData(Dataset):
     """Returns the number of examples in the data subset."""
     if self.subset == 'train':
       #return 809032
-      return 220916
+      return 669300
     if self.subset == 'validation':
-      return 4000
+      return 10000
       #return 10000
 
 
