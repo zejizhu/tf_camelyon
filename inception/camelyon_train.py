@@ -15,6 +15,7 @@ FLAGS = tf.app.flags.FLAGS
 
 
 def main(_):
+  print("run train now")
   dataset = CamelyonData(subset=FLAGS.subset)
   assert dataset.data_files()
   if tf.gfile.Exists(FLAGS.train_dir):
