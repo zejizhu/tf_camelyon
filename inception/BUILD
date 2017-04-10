@@ -101,10 +101,32 @@ py_binary(
     ],
 )
 
+py_binary(
+    name = "camelyon_test",
+    srcs = [
+        "camelyon_test.py",
+    ],
+    deps = [
+        ":camelyon_data",
+        ":inception_test",
+    ],
+)
+
 py_library(
     name = "inception_eval",
     srcs = [
         "inception_eval.py",
+    ],
+    deps = [
+        ":image_processing",
+        ":inception",
+    ],
+)
+
+py_library(
+    name = "inception_test",
+    srcs = [
+        "inception_test.py",
     ],
     deps = [
         ":image_processing",

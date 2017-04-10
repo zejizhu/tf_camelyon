@@ -38,6 +38,9 @@ tf.app.flags.DEFINE_string('eval_dir', '/tmp/imagenet_eval',
 tf.app.flags.DEFINE_string('checkpoint_dir', '/tmp/imagenet_train',
                            """Directory where to read model checkpoints.""")
 
+tf.app.flags.DEFINE_string('csv_dir', '/home1/zhuzj/dataset/camelyon16_B2/csv_out',
+                           """Directory where to read model checkpoints.""")
+
 # Flags governing the frequency of the eval.
 tf.app.flags.DEFINE_integer('eval_interval_secs', 60 * 5,
                             """How often to run the eval.""")
@@ -52,14 +55,28 @@ tf.app.flags.DEFINE_string('subset', 'validation',
                            """Either 'validation' or 'train'.""")
 
 
-def _eval_once(saver, summary_writer, top_1_op, top_5_op, summary_op):
+def save_csv(score,filenames):
+    cnt =filenames.shape[0]
+    for i in range(cnt):
+        csv_name = filenames[i][:filenames[i].find(".tif")]
+        csv_name ="%s.tif_test%s.csv"%(csv_name,filenames[i][filenames[i].find("_W"):-4])
+        csv_path=os.path.join(FLAGS.csv_dir,csv_name)
+        coord_str=filenames[i][filenames[i].find("_X")+2:filenames[i].find("_W")]
+        coord_x =(coord_str[:coord_str.find("_Y")])
+        coord_y =(coord_str[coord_str.find("_Y")+2:])
+        fd=open(csv_path,"ab+")
+        write_context = "%s,%s,%lf\n" %(coord_x,coord_y,score[i][2])
+        fd.write(write_context)
+        fd.close()
+
+
+def _eval_once(saver, summary_writer, top_1_op,positive_op, summary_op,filename_op):
   """Runs Eval once.
 
   Args:
     saver: Saver.
     summary_writer: Summary writer.
     top_1_op: Top 1 op.
-    top_5_op: Top 5 op.
     summary_op: Summary op.
   """
   with tf.Session() as sess:
@@ -94,16 +111,19 @@ def _eval_once(saver, summary_writer, top_1_op, top_5_op, summary_op):
       num_iter = int(math.ceil(FLAGS.num_examples / FLAGS.batch_size))
       # Counts the number of correct predictions.
       count_top_1 = 0.0
-      count_top_5 = 0.0
       total_sample_count = num_iter * FLAGS.batch_size
       step = 0
 
       print('%s: starting evaluation on (%s).' % (datetime.now(), FLAGS.subset))
       start_time = time.time()
       while step < num_iter and not coord.should_stop():
-        top_1, top_5 = sess.run([top_1_op, top_5_op])
+        top_1,positive_rate,filenames= sess.run([top_1_op,positive_op,filename_op])
+        #positive_rate = positive_op
+        #print(positive_rate)
+        #print(filenames)
+        #save_csv(positive_rate,filenames)
         count_top_1 += np.sum(top_1)
-        count_top_5 += np.sum(top_5)
+        #count_top_5 += np.sum(top_5)
         step += 1
         if step % 20 == 0:
           duration = time.time() - start_time
@@ -116,14 +136,14 @@ def _eval_once(saver, summary_writer, top_1_op, top_5_op, summary_op):
 
       # Compute precision @ 1.
       precision_at_1 = count_top_1 / total_sample_count
-      recall_at_5 = count_top_5 / total_sample_count
-      print('%s: precision @ 1 = %.4f recall @ 5 = %.4f [%d examples]' %
-            (datetime.now(), precision_at_1, recall_at_5, total_sample_count))
+      #recall_at_5 = count_top_5 / total_sample_count
+      print('%s: precision @ 1 = %.4f recall [%d examples]' %
+            (datetime.now(), precision_at_1, total_sample_count))
 
       summary = tf.Summary()
       summary.ParseFromString(sess.run(summary_op))
       summary.value.add(tag='Precision @ 1', simple_value=precision_at_1)
-      summary.value.add(tag='Recall @ 5', simple_value=recall_at_5)
+      #summary.value.add(tag='Recall @ 5', simple_value=recall_at_5)
       summary_writer.add_summary(summary, global_step)
 
     except Exception as e:  # pylint: disable=broad-except
@@ -137,19 +157,23 @@ def evaluate(dataset):
   """Evaluate model on Dataset for a number of steps."""
   with tf.Graph().as_default():
     # Get images and labels from the dataset.
-    images, labels = image_processing.inputs(dataset)
-
+    images, labels,filenames = image_processing.inputs(dataset)
+    #print(images.shape)
+    #print(labels.shape)
+    #print(filenames.shape)
     # Number of classes in the Dataset label set plus 1.
     # Label 0 is reserved for an (unused) background class.
     num_classes = dataset.num_classes() + 1
 
     # Build a Graph that computes the logits predictions from the
     # inference model.
-    logits, _ = inception.inference(images, num_classes)
-
+    logits, endpoints = inception.inference(images, num_classes)
+    #positive_labels = 2
     # Calculate predictions.
     top_1_op = tf.nn.in_top_k(logits, labels, 1)
-    top_5_op = tf.nn.in_top_k(logits, labels, 5)
+    #top_5_op = tf.nn.in_top_k(logits, labels, 5)
+    positive_op = endpoints['predictions']
+
 
     # Restore the moving average version of the learned variables for eval.
     variable_averages = tf.train.ExponentialMovingAverage(
@@ -165,7 +189,7 @@ def evaluate(dataset):
                                             graph_def=graph_def)
 
     while True:
-      _eval_once(saver, summary_writer, top_1_op, top_5_op, summary_op)
+      _eval_once(saver, summary_writer, top_1_op,positive_op, summary_op,filenames)
       if FLAGS.run_once:
         break
       time.sleep(FLAGS.eval_interval_secs)
