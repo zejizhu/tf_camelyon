@@ -15,9 +15,9 @@ FLAGS = tf.app.flags.FLAGS
 def main(unused_argv=None):
   dataset = CamelyonData(subset=FLAGS.subset)
   assert dataset.data_files()
-  if tf.gfile.Exists(FLAGS.eval_dir):
-    tf.gfile.DeleteRecursively(FLAGS.eval_dir)
-  tf.gfile.MakeDirs(FLAGS.eval_dir)
+  if tf.gfile.Exists(FLAGS.test_dir):
+    tf.gfile.DeleteRecursively(FLAGS.test_dir)
+  tf.gfile.MakeDirs(FLAGS.test_dir)
   inception_test.test(dataset)
 
 

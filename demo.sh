@@ -12,13 +12,12 @@ DIR_TRAIN_MODEL="${DIR_DATA_TOP}/models_bak_0408/"
 PATH_MODEL_CHECKPOINT="${DIR_DATA_TOP}/models_bak_0408/model.ckpt-04082045-80000"
 DIR_LOG="${DIR_DATA_TOP}/logs/"
 
-
 batch_size=128
 num_gpu=2
 init_learning_rate=0.01
 max_steps=160000
 num_examples=8196
-test_examples_cnt=10000
+test_examples_cnt=2370610
 
 input_model="$1"
 #echo "$input_model"
@@ -53,7 +52,6 @@ elif [ "${input_model}" = "eval" ];then
         --eval_dir="${DIR_EVAL_MODEL}" \
         --data_dir="${DIR_DATA}" \
         --subset=validation \
-        --num_examples=500 \
         --checkpoint_dir="${DIR_TRAIN_MODEL}"\
         --input_queue_memory_factor=1 \
         --num_examples="${num_examples}" \
@@ -65,14 +63,15 @@ elif [ "${input_model}" = "test" ];then
     mkdir -p ${DIR_TEST_MODEL}
     mkdir -p ${DIR_CSV_OUTS}
     bazel-bin/inception/camelyon_test \
-        --eval_dir="${DIR_TEST_MODEL}" \
+        --test_dir="${DIR_TEST_MODEL}" \
         --data_dir="${DIR_DATA}" \
-        --subset=validation \
-        --num_examples=100000 \
+        --subset=test \
         --csv_dir="${DIR_CSV_OUTS}" \
-        --checkpoint_dir="${DIR_TRAIN_MODEL}"\
+        --checkpoint_dir="${DIR_TRAIN_MODEL}" \
         --input_queue_memory_factor=1 \
         --num_examples="${test_examples_cnt}" \
+        --batch_size="${batch_size}" \
+        --num_gpus="${num_gpu}" \
         --run_once
 
 else

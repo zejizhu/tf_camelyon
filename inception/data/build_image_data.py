@@ -402,6 +402,76 @@ def _find_image_files(data_dir, labels_file):
         (len(filenames), len(unique_labels), data_dir))
   return filenames, texts, labels
 
+def find_image_files(data_dir, labels_file):
+  """Build a list of all images files and labels in the data set.
+
+  Args:
+    data_dir: string, path to the root directory of images.
+
+      Assumes that the image data set resides in JPEG files located in
+      the following directory structure.
+
+        data_dir/dog/another-image.JPEG
+        data_dir/dog/my-image.jpg
+
+      where 'dog' is the label associated with these images.
+
+    labels_file: string, path to the labels file.
+
+      The list of valid labels are held in this file. Assumes that the file
+      contains entries as such:
+        dog
+        cat
+        flower
+      where each line corresponds to a label. We map each label contained in
+      the file to an integer starting with the integer 0 corresponding to the
+      label contained in the first line.
+
+  Returns:
+    filenames: list of strings; each string is a path to an image file.
+    texts: list of strings; each string is the class, e.g. 'dog'
+    labels: list of integer; each integer identifies the ground truth.
+  """
+  print('Determining list of input files and labels from %s.' % data_dir)
+  unique_labels = [l.strip() for l in tf.gfile.FastGFile(
+      labels_file, 'r').readlines()]
+
+  labels = []
+  filenames = []
+  texts = []
+
+  # Leave label index 0 empty as a background class.
+  label_index = 1
+
+  # Construct the list of JPEG files and labels.
+  for text in unique_labels:
+    jpeg_file_path = '%s/%s/*' % (data_dir, text)
+    matching_files = tf.gfile.Glob(jpeg_file_path)
+
+    labels.extend([label_index] * len(matching_files))
+    texts.extend([text] * len(matching_files))
+    filenames.extend(matching_files)
+
+    if not label_index % 100:
+      print('Finished finding files in %d of %d classes.' % (
+          label_index, len(labels)))
+    label_index += 1
+
+  # Shuffle the ordering of all image files in order to guarantee
+  # random ordering of the images with respect to label in the
+  # saved TFRecord files. Make the randomization repeatable.
+  shuffled_index = list(range(len(filenames)))
+  random.seed(12345)
+  random.shuffle(shuffled_index)
+
+  filenames = [filenames[i] for i in shuffled_index]
+  texts = [texts[i] for i in shuffled_index]
+  labels = [labels[i] for i in shuffled_index]
+
+  print('Found %d JPEG files across %d labels inside %s.' %
+        (len(filenames), len(unique_labels), data_dir))
+  return filenames, texts, labels
+
 
 def _process_dataset(name, directory, num_shards, labels_file):
   """Process a complete data set and save it as a TFRecord.
@@ -413,6 +483,7 @@ def _process_dataset(name, directory, num_shards, labels_file):
     labels_file: string, path to the labels file.
   """
   filenames, texts, labels = _find_image_files(directory, labels_file)
+  #filenames, texts, labels = find_image_files(directory, labels_file)
   _process_image_files(name, filenames, texts, labels, num_shards)
 
 
@@ -428,6 +499,9 @@ def main(unused_argv):
   _process_dataset('validation', FLAGS.validation_directory,
                    FLAGS.validation_shards, FLAGS.labels_file)
   _process_dataset('train', FLAGS.train_directory,
+                   FLAGS.train_shards, FLAGS.labels_file)
+
+  _process_dataset('test', FLAGS.train_directory,
                    FLAGS.train_shards, FLAGS.labels_file)
 
 

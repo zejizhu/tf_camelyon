@@ -45,7 +45,7 @@ tf.app.flags.DEFINE_string('csv_dir', '/tmp/csv_dir',
 tf.app.flags.DEFINE_integer('eval_interval_secs', 60 * 5,
                             """How often to run the eval.""")
 tf.app.flags.DEFINE_boolean('run_once', False,
-                            """Whether to run eval only once.""")
+                            """Whether to run test only once.""")
 
 # Flags governing the data used for the eval.
 tf.app.flags.DEFINE_integer('num_examples', 50000,
@@ -54,21 +54,34 @@ tf.app.flags.DEFINE_integer('num_examples', 50000,
 tf.app.flags.DEFINE_string('subset', 'validation',
                            """Either 'validation' or 'train'.""")
 
-
+fd_name="outs.tmp"
+fd = open(fd_name,"ab+")
 
 def save_csv(score,filenames):
     cnt =filenames.shape[0]
+    fd_name = "outs.tmp"
+    global fd_name
+    global fd
+    #csv_path = os.path.join(FLAGS.csv_dir, fd_name)
+    #fd = open(csv_path, "ab+")
     for i in range(cnt):
         csv_name = filenames[i][:filenames[i].find(".tif")]
         csv_name ="%s.tif_test%s.csv"%(csv_name,filenames[i][filenames[i].find("_W"):-4])
-        csv_path=os.path.join(FLAGS.csv_dir,csv_name)
+        #csv_path=os.path.join(FLAGS.csv_dir,csv_name)
         coord_str=filenames[i][filenames[i].find("_X")+2:filenames[i].find("_W")]
-        coord_x =(coord_str[:coord_str.find("_Y")])
-        coord_y =(coord_str[coord_str.find("_Y")+2:])
-        fd=open(csv_path,"ab+")
-        write_context = "%s,%s,%lf\n" %(coord_x,coord_y,score[i][2])
+        coord_x =int(coord_str[:coord_str.find("_Y")])
+        coord_y =int(coord_str[coord_str.find("_Y")+2:])
+        if fd_name != csv_name:
+            fd.close()
+            fd_name = csv_name
+            csv_path = os.path.join(FLAGS.csv_dir, fd_name)
+            fd = open(csv_path, "ab+")
+        #fd=open(csv_path,"ab+")
+        write_context = "%d,%d,%lf\n" %(coord_x,coord_y,score[i][2])
         fd.write(write_context)
-        fd.close()
+        #fd.close()
+
+    #fd.close()
 
 def _test_one_slide(saver, summary_writer,positive_op, summary_op,filename_op):
   """Runs Eval once.
@@ -109,8 +122,10 @@ def _test_one_slide(saver, summary_writer,positive_op, summary_op,filename_op):
                                          start=True))
 
       num_iter = int(math.ceil(FLAGS.num_examples / FLAGS.batch_size))
-      # Counts the number of correct predictions.
+      #Counts the number of correct predictions.
       #count_top_1 = 0.0
+      #print(num_iter)
+      #print(FLAGS.num_examples)
       total_sample_count = num_iter * FLAGS.batch_size
       step = 0
 
@@ -146,7 +161,7 @@ def test(dataset):
   """Evaluate model on Dataset for a number of steps."""
   with tf.Graph().as_default():
     # Get images and labels from the dataset.
-    images, labels,filenames = image_processing.inputs(dataset)
+    images, labels, filenames = image_processing.inputs(dataset)
 
     # Number of classes in the Dataset label set plus 1.
     # Label 0 is reserved for an (unused) background class.
