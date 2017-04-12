@@ -31,6 +31,7 @@ from inception import inception_model as inception
 
 
 FLAGS = tf.app.flags.FLAGS
+'''
 
 tf.app.flags.DEFINE_string('test_dir', '/tmp/imagenet_eval',
                            """Directory where to write event logs.""")
@@ -52,6 +53,8 @@ tf.app.flags.DEFINE_integer('num_examples', 50000,
                             """ImageNet dataset contains 50000 examples.""")
 tf.app.flags.DEFINE_string('subset', 'validation',
                            """Either 'validation' or 'train'.""")
+
+'''
 
 fd_name="outs.tmp"
 fd = open(fd_name,"ab+")

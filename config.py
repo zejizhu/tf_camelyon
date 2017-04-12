@@ -11,12 +11,12 @@ class config_run():
 class config_path:
     def __init__(self):
         self.data_dir_top="/home1/zhuzj/dataset/camelyon16_B2/"
-        self.data_dir = "TFRecords/"
+        self.data_dir = "TFRecords_ALL/"
         self.train_dir="events/train/"
         self.eva_dir="events/eval/"
         self.test_dir="events/test/"
         self.csv_dir="csv_outs"
-        self.mode_dir="models"
+        self.mode_dir="models_bak_0408"
         self.model_checkpoint="model.ckpt-04082045-80000"
         self.top_dir= sys.path[0]
         self.inception_dir ="inception"
@@ -27,11 +27,12 @@ class config_param:
         self.input_queue_memory_factor=1
         self.max_step = 160000
         self.gpu_num = 2
-        self.batch_size=2
+        self.batch_size=64
         self.fine_tune =1
         self.eval_num_example=8196
         self.test_num_example=2370610
         self.test_run_once = 1
+        self.test_batch_size = 64
 
 class config_const:
     def __init__(self):

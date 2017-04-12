@@ -33,6 +33,7 @@ from inception.slim import slim
 
 FLAGS = tf.app.flags.FLAGS
 
+'''
 tf.app.flags.DEFINE_string('train_dir', '/tmp/imagenet_train',
                            """Directory where to write event logs """
                            """and checkpoint.""")
@@ -73,6 +74,7 @@ tf.app.flags.DEFINE_float('num_epochs_per_decay', 30.0,
 tf.app.flags.DEFINE_float('learning_rate_decay_factor', 0.16,
                           """Learning rate decay factor.""")
 
+'''
 # Constants dictating the learning rate schedule.
 RMSPROP_DECAY = 0.9                # Decay term for RMSProp.
 RMSPROP_MOMENTUM = 0.9             # Momentum in RMSProp.

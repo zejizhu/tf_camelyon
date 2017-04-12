@@ -1,14 +1,15 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 import os
 import sys
 import tensorflow as tf
-import numpy as np
-
 import config as cfg
-#path = cfg.config_path()
-#sys.path.append(path.top_dir)
 
-import inception
+import inception.camelyon_test as camelyon_test
+import inception.camelyon_train as camelyon_train
+import inception.camelyon_eval as camelyon_eval
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -39,6 +40,8 @@ def test_init():
     else:
         os.makedirs(csv_path)
         print("creat the dir %s!" %(csv_path))
+    #tf.app.flags.DEFINE_string('test_dir',str(os.path.join(path.data_dir_top,path.test_dir)),"""Directory where to write event logs.""")
+
     FLAGS.test_dir = str(os.path.join(path.data_dir_top,path.test_dir))
     FLAGS.data_dir = str(os.path.join(path.data_dir_top,path.data_dir))
     FLAGS.csv_dir = str(os.path.join(path.data_dir_top,path.csv_dir))
@@ -46,22 +49,21 @@ def test_init():
     FLAGS.subset=str(run.mode)
     FLAGS.input_queue_memory_factor = param.input_queue_memory_factor
     FLAGS.num_examples = param.test_num_example
-    FLAGS.batch_size = param.batch_size
+    FLAGS.batch_size = param.test_batch_size
     FLAGS.num_gpus = param.gpu_num
     FLAGS.run_once = param.test_run_once
 
     return  0
+
 def test():
     test_init()
     print("test function now!")
-    inception.camelyon_test()
-
+    camelyon_test.main()
     return 0
 
-def main():
+def main(unused_argv=None):
     cfg_run = cfg.config_run()
     cfg_const = cfg.config_const()
-    print("main")
     if cfg.init() != 0:
         print("config init fail!")
         return 1
@@ -76,7 +78,7 @@ def main():
     return 0
 
 if __name__ == "__main__":
-    main()
+    tf.app.run()
 
 
 

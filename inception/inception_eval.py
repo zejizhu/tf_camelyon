@@ -32,7 +32,7 @@ from inception import inception_model as inception
 
 
 FLAGS = tf.app.flags.FLAGS
-
+'''
 tf.app.flags.DEFINE_string('eval_dir', '/tmp/imagenet_eval',
                            """Directory where to write event logs.""")
 tf.app.flags.DEFINE_string('checkpoint_dir', '/tmp/imagenet_train',
@@ -53,7 +53,7 @@ tf.app.flags.DEFINE_integer('num_examples', 50000,
                             """ImageNet dataset contains 50000 examples.""")
 tf.app.flags.DEFINE_string('subset', 'validation',
                            """Either 'validation' or 'train'.""")
-
+'''
 
 def save_csv(score,filenames):
     cnt =filenames.shape[0]

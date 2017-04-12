@@ -31,12 +31,16 @@ import os
 
 import tensorflow as tf
 
-FLAGS = tf.app.flags.FLAGS
+import inception.tf_flag_define as tf_flag_define
 
+FLAGS = tf.app.flags.FLAGS
+'''
 # Basic model parameters.
 tf.app.flags.DEFINE_string('data_dir', '/tmp/mydata',
                            """Path to the processed data, i.e. """
                            """TFRecord of Example protos.""")
+'''
+tf_flag_define.init()
 
 
 class Dataset(object):

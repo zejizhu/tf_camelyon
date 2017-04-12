@@ -13,6 +13,7 @@ FLAGS = tf.app.flags.FLAGS
 
 
 def main(unused_argv=None):
+  #print("--------->>%s" %(FLAGS.test_dir))
   dataset = CamelyonData(subset=FLAGS.subset)
   assert dataset.data_files()
   if tf.gfile.Exists(FLAGS.test_dir):
