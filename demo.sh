@@ -1,19 +1,19 @@
 #!/bin/sh
 
-DIR_DATA_TOP="/home1/zhuzj/dataset/camelyon16_B2"
+DIR_DATA_TOP="/home/user/zzj/dataset/camelyon_B2"
 #DIR_TRAIN="${DIR_DATA_TOP}/raw-data/train/"
 #DIR_EVAL="${DIR_DATA_TOP}/raw-data/validation/"
-DIR_DATA="${DIR_DATA_TOP}/TFRecords_all/"
+DIR_DATA="${DIR_DATA_TOP}/TFRecords_ALL/"
 DIR_TEST_DATA="${DIR_DATA_TOP}/test_data/"
 DIR_CSV_OUTS="${DIR_DATA_TOP}/csv_outs/"
 DIR_EVAL_MODEL="${DIR_DATA_TOP}/eval_models/"
 DIR_TEST_MODEL="${DIR_DATA_TOP}/test_models/"
 DIR_TRAIN_MODEL="${DIR_DATA_TOP}/models_bak_0408/"
-PATH_MODEL_CHECKPOINT="${DIR_DATA_TOP}/models_bak_0408/model.ckpt-04082045-80000"
+PATH_MODEL_CHECKPOINT="${DIR_DATA_TOP}/models_bak_0408/model.ckpt-04091946-150000"
 DIR_LOG="${DIR_DATA_TOP}/logs/"
 
-batch_size=128
-num_gpu=2
+batch_size=64
+num_gpu=1
 init_learning_rate=0.01
 max_steps=160000
 num_examples=8196

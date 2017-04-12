@@ -1,7 +1,10 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import os
 import sys
 
-class conifg_run():
+class config_run():
     def __init__(self):
         self.mode="test"
 
@@ -28,6 +31,7 @@ class config_param:
         self.fine_tune =1
         self.eval_num_example=8196
         self.test_num_example=2370610
+        self.test_run_once = 1
 
 class config_const:
     def __init__(self):
@@ -54,12 +58,12 @@ def dir_check():
     if os.path.exists(test_dir):
         print("%s is exists!" %(test_dir))
     else:
-        os.makedirs(eval_dir)
+        os.makedirs(test_dir)
         print("creat the dit %s! "%(test_dir))
 
     return 0
 def mode_check():
-    run = conifg_run()
+    run = config_run()
     const_val = config_const()
     if run.mode == const_val.TEST_MODE:
         print("the run mode is %s!" %(run.mode ))
@@ -78,3 +82,8 @@ def init():
     if dir_check() !=0:
         return 1
     return  0
+
+
+if __name__ == "__main__":
+    print("run config init!")
+    init()

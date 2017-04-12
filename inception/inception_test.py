@@ -23,8 +23,7 @@ import math
 import os.path
 import time
 
-
-import numpy as np
+#import numpy as np
 import tensorflow as tf
 
 from inception import image_processing
@@ -59,7 +58,7 @@ fd = open(fd_name,"ab+")
 
 def save_csv(score,filenames):
     cnt =filenames.shape[0]
-    fd_name = "outs.tmp"
+    #fd_name = "outs.tmp"
     global fd_name
     global fd
     #csv_path = os.path.join(FLAGS.csv_dir, fd_name)
@@ -77,7 +76,7 @@ def save_csv(score,filenames):
             csv_path = os.path.join(FLAGS.csv_dir, fd_name)
             fd = open(csv_path, "ab+")
         #fd=open(csv_path,"ab+")
-        write_context = "%d,%d,%lf\n" %(coord_x,coord_y,score[i][2])
+        write_context = "%03d,%03d,%lf\n" %(coord_x,coord_y,score[i][2])
         fd.write(write_context)
         #fd.close()
 
@@ -88,8 +87,7 @@ def _test_one_slide(saver, summary_writer,positive_op, summary_op,filename_op):
 
   Args:
     saver: Saver.
-    summary_writer: Summary writer.
-    top_1_op: Top 1 op.
+    summary_writer: Summary writer..
     summary_op: Summary op.
   """
   with tf.Session() as sess:
