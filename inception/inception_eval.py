@@ -55,20 +55,6 @@ tf.app.flags.DEFINE_string('subset', 'validation',
                            """Either 'validation' or 'train'.""")
 '''
 
-def save_csv(score,filenames):
-    cnt =filenames.shape[0]
-    for i in range(cnt):
-        csv_name = filenames[i][:filenames[i].find(".tif")]
-        csv_name ="%s.tif_test%s.csv"%(csv_name,filenames[i][filenames[i].find("_W"):-4])
-        csv_path=os.path.join(FLAGS.csv_dir,csv_name)
-        coord_str=filenames[i][filenames[i].find("_X")+2:filenames[i].find("_W")]
-        coord_x =(coord_str[:coord_str.find("_Y")])
-        coord_y =(coord_str[coord_str.find("_Y")+2:])
-        fd=open(csv_path,"ab+")
-        write_context = "%s,%s,%lf\n" %(coord_x,coord_y,score[i][2])
-        fd.write(write_context)
-        fd.close()
-
 
 def _eval_once(saver, summary_writer, top_1_op,positive_op, summary_op,filename_op):
   """Runs Eval once.
@@ -121,7 +107,6 @@ def _eval_once(saver, summary_writer, top_1_op,positive_op, summary_op,filename_
         #positive_rate = positive_op
         #print(positive_rate)
         #print(filenames)
-        #save_csv(positive_rate,filenames)
         count_top_1 += np.sum(top_1)
         #count_top_5 += np.sum(top_5)
         step += 1

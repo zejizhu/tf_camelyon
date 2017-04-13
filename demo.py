@@ -27,6 +27,7 @@ def eval_init():
     return 0
 
 def eval():
+    eval_init()
 
     return 0
 
@@ -40,7 +41,6 @@ def test_init():
     else:
         os.makedirs(csv_path)
         print("creat the dir %s!" %(csv_path))
-    #tf.app.flags.DEFINE_string('test_dir',str(os.path.join(path.data_dir_top,path.test_dir)),"""Directory where to write event logs.""")
 
     FLAGS.test_dir = str(os.path.join(path.data_dir_top,path.test_dir))
     FLAGS.data_dir = str(os.path.join(path.data_dir_top,path.data_dir))
@@ -61,7 +61,18 @@ def test():
     camelyon_test.main()
     return 0
 
+
+def print_mode():
+    cfg_run = cfg.config_run()
+    print("================================================")
+    print("===                                          ===")
+    print("===              %s mode                   ==="%  (cfg_run.mode))
+    print("===                                          ===")
+    print("================================================")
+
+
 def main(unused_argv=None):
+    print_mode()
     cfg_run = cfg.config_run()
     cfg_const = cfg.config_const()
     if cfg.init() != 0:

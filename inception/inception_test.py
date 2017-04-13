@@ -68,18 +68,21 @@ def save_csv(score,filenames):
     #fd = open(csv_path, "ab+")
     for i in range(cnt):
         csv_name = filenames[i][:filenames[i].find(".tif")]
-        csv_name ="%s.tif_test%s.csv"%(csv_name,filenames[i][filenames[i].find("_W"):-4])
-        #csv_path=os.path.join(FLAGS.csv_dir,csv_name)
-        coord_str=filenames[i][filenames[i].find("_X")+2:filenames[i].find("_W")]
+        coord_str = filenames[i][filenames[i].find("_X") + 2:filenames[i].find("_W")]
         coord_x =int(coord_str[:coord_str.find("_Y")])
         coord_y =int(coord_str[coord_str.find("_Y")+2:])
+        img_str = filenames[i][filenames[i].find("_W") + 2:filenames[i].find(".jpg")]
+        img_w = int(img_str[:img_str.find("_H")])
+        img_h = int(img_str[img_str.find("_H") + 2:])
+        csv_name ="%s.tif_test_W%03d_H%03d.csv"%(csv_name,img_w,img_h)
+        #csv_path=os.path.join(FLAGS.csv_dir,csv_name)
         if fd_name != csv_name:
             fd.close()
             fd_name = csv_name
             csv_path = os.path.join(FLAGS.csv_dir, fd_name)
             fd = open(csv_path, "ab+")
         #fd=open(csv_path,"ab+")
-        write_context = "%03d,%03d,%lf\n" %(coord_x,coord_y,score[i][2])
+        write_context = "%d,%d,%lf\n" %(coord_x,coord_y,score[i][2])
         fd.write(write_context)
         #fd.close()
 
