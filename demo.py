@@ -7,10 +7,11 @@ import sys
 import numpy as np
 import tensorflow as tf
 import config as cfg
+from inception import  *
 
-import inception.camelyon_test as camelyon_test
-import inception.camelyon_train as camelyon_train
-import inception.camelyon_eval as camelyon_eval
+#import inception.camelyon_test as camelyon_test
+#import inception.camelyon_train as camelyon_train
+#import inception.camelyon_eval as camelyon_eval
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -18,12 +19,6 @@ def train_init():
     path = cfg.config_path()
     run = cfg.config_run()
     param = cfg.config_param()
-    #csv_path = os.path.join(path.data_dir_top,path.csv_dir)
-    #if os.path.exists(csv_path):
-    #    print("%s is exist!"%(csv_path))
-    #else:
-    #    os.makedirs(csv_path)
-    #    print("creat the dir %s!" %(csv_path))
 
     FLAGS.train_dir = str(os.path.join(path.data_dir_top,path.train_dir))
     FLAGS.data_dir = str(os.path.join(path.data_dir_top,path.data_dir))
@@ -75,7 +70,7 @@ def test_init():
     FLAGS.test_dir = str(os.path.join(path.data_dir_top,path.test_dir))
     FLAGS.data_dir = str(os.path.join(path.data_dir_top,path.data_dir))
     FLAGS.csv_dir = str(os.path.join(path.data_dir_top,path.csv_dir))
-    FLAGS.checkpoint_dir = str(os.path.join(path.data_dir_top,path.mode_dir))
+    FLAGS.checkpoint_dir = str(os.path.join(path.data_dir_top,path.models_dir))
     FLAGS.subset=str(run.mode)
     FLAGS.input_queue_memory_factor = param.input_queue_memory_factor
     FLAGS.num_examples = param.test_num_example
