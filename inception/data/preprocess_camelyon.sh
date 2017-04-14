@@ -61,6 +61,7 @@ done < "${LABELS_FILE}"
 cd "${CURRENT_DIR}"
 BUILD_SCRIPT="${WORK_DIR}/build_image_data.py"
 OUTPUT_DIRECTORY="${DATA_DIR}/TFRecords/"
+mkdir -p "${OUTPUT_DIRECTORY}"
 python "${BUILD_SCRIPT}" \
   --train_directory="${TRAIN_DIRECTORY}" \
   --validation_directory="${VALIDATION_DIRECTORY}" \
