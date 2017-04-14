@@ -38,7 +38,6 @@ def train():
     camelyon_train.main()
     return 0
 
-
 def eval_init():
     path = cfg.config_path()
     run = cfg.config_run()

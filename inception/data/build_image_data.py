@@ -80,15 +80,19 @@ tf.app.flags.DEFINE_string('train_directory', '/tmp/',
 tf.app.flags.DEFINE_string('validation_directory', '/tmp/',
                            'Validation data directory')
 tf.app.flags.DEFINE_string('test_directory', '/tmp/',
-                           'Validation data directory')
+                           'test data directory')
 tf.app.flags.DEFINE_string('output_directory', '/tmp/',
                            'Output data directory')
 
-tf.app.flags.DEFINE_integer('train_shards', 2,
+tf.app.flags.DEFINE_integer('data_mode', 1,
                             'Number of shards in training TFRecord files.')
-tf.app.flags.DEFINE_integer('validation_shards', 2,
+
+
+tf.app.flags.DEFINE_integer('train_shards', 64,
+                            'Number of shards in training TFRecord files.')
+tf.app.flags.DEFINE_integer('validation_shards', 32,
                             'Number of shards in validation TFRecord files.')
-tf.app.flags.DEFINE_integer('test_shards', 2,
+tf.app.flags.DEFINE_integer('test_shards', 64,
                             'Number of shards in validation TFRecord files.')
 
 tf.app.flags.DEFINE_integer('num_threads', 8,
@@ -448,19 +452,18 @@ def test_find_image_files(data_dir, labels_file):
     # Leave label index 0 empty as a background class.
     label_index = 1
 
-  # Construct the list of JPEG files and labels.
-  #for text in unique_labels:
-    jpeg_file_path = '%s/*' % (data_dir)
-    matching_files = tf.gfile.Glob(jpeg_file_path)
+    for text in unique_labels:
+        jpeg_file_path = '%s/%s/*' % (data_dir, text)
+        matching_files = tf.gfile.Glob(jpeg_file_path)
 
-    labels.extend([1] * len(matching_files))
-    texts.extend(['negative'] * len(matching_files))
-    filenames.extend(matching_files)
+        labels.extend([label_index] * len(matching_files))
+        texts.extend([text] * len(matching_files))
+        filenames.extend(matching_files)
 
-    if not label_index % 100:
-      print('Finished finding files in %d of %d classes.' % (
-          label_index, len(labels)))
-    label_index += 1
+        if not label_index % 100:
+            print('Finished finding files in %d of %d classes.' % (
+                label_index, len(labels)))
+        label_index += 1
 
     '''
     # Shuffle the ordering of all image files in order to guarantee
@@ -502,16 +505,17 @@ def main(unused_argv):
   assert not FLAGS.validation_shards % FLAGS.num_threads, (
       'Please make the FLAGS.num_threads commensurate with '
       'FLAGS.validation_shards')
+  assert not FLAGS.test_shards % FLAGS.num_threads, (
+      'Please make the FLAGS.num_threads commensurate with '
+      'FLAGS.validation_shards')
   print('Saving results to %s' % FLAGS.output_directory)
 
   # Run it!
-  _process_dataset('validation', FLAGS.validation_directory,
-                   FLAGS.validation_shards, FLAGS.labels_file)
-  _process_dataset('train', FLAGS.train_directory,
-                   FLAGS.train_shards, FLAGS.labels_file)
-
-  _process_dataset('test', FLAGS.test_directory,
-                   FLAGS.train_shards, FLAGS.labels_file)
+  if FLAGS.data_mode== 1:
+      _process_dataset('validation', FLAGS.validation_directory, FLAGS.validation_shards, FLAGS.labels_file)
+      _process_dataset('train', FLAGS.train_directory,FLAGS.train_shards, FLAGS.labels_file)
+  elif FLAGS.data_mode == 2:
+      _process_dataset('test', FLAGS.train_directory,FLAGS.test_shards, FLAGS.labels_file)
 
 
 if __name__ == '__main__':

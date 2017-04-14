@@ -10,9 +10,9 @@ class config_run():
 
 class config_path:
     def __init__(self):
-        self.data_dir_top="/home1/zhuzj/dataset/camelyon16_B2"
+        self.data_dir_top="/home/zhuzj/dataset/camelyon16_B2"
         #self.data_dir = "TFRecords_HSD/"
-        self.data_dir = "TFRecords_ALL/"
+        self.data_dir = "TFRecords_HSD/"
         self.train_dir="events/train/"
         self.eva_dir="events/eval/"
         self.test_dir="events/test/"
