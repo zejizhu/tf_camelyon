@@ -17,6 +17,9 @@ py_library(
     srcs = [
         "dataset.py",
     ],
+    deps = [
+        ":tf_flag_define",
+    ],
 )
 
 py_library(
@@ -53,6 +56,12 @@ py_library(
     name = "image_processing",
     srcs = [
         "image_processing.py",
+    ],
+)
+py_library(
+    name = "tf_flag_define",
+    srcs = [
+        "tf_flag_define.py",
     ],
 )
 

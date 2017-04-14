@@ -3,25 +3,26 @@
 DIR_DATA_TOP="/home/user/zzj/dataset/camelyon_B2"
 #DIR_TRAIN="${DIR_DATA_TOP}/raw-data/train/"
 #DIR_EVAL="${DIR_DATA_TOP}/raw-data/validation/"
-DIR_DATA="${DIR_DATA_TOP}/TFRecords_ALL/"
+DIR_DATA="${DIR_DATA_TOP}/TFRecords_HSD/"
 DIR_TEST_DATA="${DIR_DATA_TOP}/test_data/"
 DIR_CSV_OUTS="${DIR_DATA_TOP}/csv_outs/"
 DIR_EVAL_MODEL="${DIR_DATA_TOP}/eval_models/"
 DIR_TEST_MODEL="${DIR_DATA_TOP}/test_models/"
-DIR_TRAIN_MODEL="${DIR_DATA_TOP}/models_bak_0408/"
-PATH_MODEL_CHECKPOINT="${DIR_DATA_TOP}/models_bak_0408/model.ckpt-04091946-150000"
+DIR_TRAIN_MODEL="${DIR_DATA_TOP}/models_hsd/"
+PATH_MODEL_CHECKPOINT="${DIR_DATA_TOP}/models_hsd/model.ckpt-04091946-150000"
 DIR_LOG="${DIR_DATA_TOP}/logs/"
 
 batch_size=64
 num_gpu=1
 init_learning_rate=0.01
-max_steps=160000
+max_steps=120000
 num_examples=8196
 test_examples_cnt=2370610
 
 input_model="$1"
 #echo "$input_model"
 
+#--pretrained_model_checkpoint_path= "${PATH_MODEL_CHECKPOINT}"\
 touch WORKSPACE
 
 if [ "${input_model}" = "train" ];then
@@ -38,7 +39,6 @@ if [ "${input_model}" = "train" ];then
         --fine_tune=False \
         --initial_learning_rate="${init_learning_rate}" \
         --input_queue_memory_factor=1 \
-        --pretrained_model_checkpoint_path= "${PATH_MODEL_CHECKPOINT}"\
         --batch_size="${batch_size}" \
         --num_gpus="${num_gpu}" \
         --max_steps="${max_steps}"

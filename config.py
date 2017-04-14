@@ -6,17 +6,18 @@ import sys
 
 class config_run():
     def __init__(self):
-        self.mode="test"
+        self.mode="train"
 
 class config_path:
     def __init__(self):
-        self.data_dir_top="/home1/zhuzj/dataset/camelyon16_B2/"
+        self.data_dir_top="/home1/zhuzj/dataset/camelyon16_B2"
+        #self.data_dir = "TFRecords_HSD/"
         self.data_dir = "TFRecords_ALL/"
         self.train_dir="events/train/"
         self.eva_dir="events/eval/"
         self.test_dir="events/test/"
         self.csv_dir="csv_outs"
-        self.models_dir="models_bak_0408"
+        self.models_dir="models_hsd"
         self.model_checkpoint="model.ckpt-04082045-80000"
         self.top_dir= sys.path[0]
         self.inception_dir ="inception"
@@ -25,9 +26,9 @@ class config_param:
     def __init__(self):
         self.init_learning_rate=0.01
         self.input_queue_memory_factor=1
-        self.max_step = 160000
+        self.max_step = 120000
         self.gpu_num = 1
-        self.batch_size=64
+        self.train_batch_size=64
         self.fine_tune =1
         self.eval_num_example=8196
         self.eval_batch_size = 64

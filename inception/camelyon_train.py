@@ -14,7 +14,7 @@ from inception.camelyon_data import CamelyonData
 FLAGS = tf.app.flags.FLAGS
 
 
-def main(_):
+def main(unused_argv=None):
   dataset = CamelyonData(subset=FLAGS.subset)
   assert dataset.data_files()
   if tf.gfile.Exists(FLAGS.train_dir):

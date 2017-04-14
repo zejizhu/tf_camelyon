@@ -27,14 +27,15 @@ def train_init():
     FLAGS.fine_tune = param.fine_tune
     FLAGS.initial_learning_rate = param.init_learning_rate
     FLAGS.input_queue_memory_factor = param.input_queue_memory_factor
+    FLAGS.checkpoint_dir = str(os.path.join(path.data_dir_top, path.models_dir))
     FLAGS.pretrained_model_checkpoint_path = str(os.path.join(path.data_dir_top,path.models_dir,path.model_checkpoint))
-    FLAGS.batch_size = param.batch_size
+    FLAGS.batch_size = param.train_batch_size
     FLAGS.num_gpus =param.gpu_num
     FLAGS.max_steps = param.max_step
     FLAGS.subset = str(run.mode)
 def train():
     train_init()
-    camelyon_train.main(0)
+    camelyon_train.main()
     return 0
 
 
@@ -92,7 +93,7 @@ def print_mode():
     cfg_run = cfg.config_run()
     print("================================================")
     print("===                                          ===")
-    print("===              %s mode                   ==="%  (cfg_run.mode))
+    print("                 %s mode                   "%  (cfg_run.mode))
     print("===                                          ===")
     print("================================================")
 
