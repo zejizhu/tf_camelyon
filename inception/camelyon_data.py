@@ -8,7 +8,6 @@ from __future__ import print_function
 
 from inception.dataset import Dataset
 
-
 class CamelyonData(Dataset):
   """Flowers data set."""
 
@@ -29,7 +28,6 @@ class CamelyonData(Dataset):
       #return 10000
     if self.subset == 'test':
       return 2370610
-
 
 
   def download_message(self):

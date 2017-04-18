@@ -173,7 +173,7 @@ def test(dataset):
 
     # Build a Graph that computes the logits predictions from the
     # inference model.
-    logits, endpoints = inception.inference(images, num_classes)
+    endpoints = inception.inference_endpoint(images, num_classes)
     # Calculate predictions.
     positive_op = endpoints['predictions']
     # Restore the moving average version of the learned variables for eval.

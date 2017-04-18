@@ -110,9 +110,11 @@ def _tower_loss(images, labels, num_classes, scope, reuse_variables=None):
                                  restore_logits=restore_logits,
                                  scope=scope)
 
+  print("_tower_loss shape :%s " % (str(logits[0].shape)))
   # Build the portion of the Graph calculating the losses. Note that we will
   # assemble the total_loss using a custom function below.
   split_batch_size = images.get_shape().as_list()[0]
+  #print("shape:%s "%(str(logits[0].shape)))
   inception.loss(logits, labels, batch_size=split_batch_size)
 
   # Assemble all of the losses for the current tower only.

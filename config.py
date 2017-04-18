@@ -17,7 +17,7 @@ class config_path:
         self.eva_dir="events/eval/"
         self.test_dir="events/test/"
         self.csv_dir="csv_outs"
-        self.models_dir="models_hsd"
+        self.models_dir="models_tmp"
         self.model_checkpoint="model.ckpt-04082045-80000"
         self.top_dir= sys.path[0]
         self.inception_dir ="inception"
@@ -36,10 +36,11 @@ class config_param:
         self.test_run_once = 1
         self.test_batch_size = 64
 
+
 class config_const:
     def __init__(self):
         self.TRAIN_MODE="train"
-        self.EVAL_MODE="eval"
+        self.EVAL_MODE="validation"
         self.TEST_MODE="test"
 
 def dir_check():

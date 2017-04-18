@@ -152,9 +152,10 @@ def evaluate(dataset):
 
     # Build a Graph that computes the logits predictions from the
     # inference model.
-    logits, endpoints = inception.inference(images, num_classes)
+    endpoints = inception.inference_endpoint(images, num_classes)
     #positive_labels = 2
     # Calculate predictions.
+    logits = endpoints['logits']
     top_1_op = tf.nn.in_top_k(logits, labels, 1)
     #top_5_op = tf.nn.in_top_k(logits, labels, 5)
     positive_op = endpoints['predictions']

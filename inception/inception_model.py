@@ -92,8 +92,61 @@ def inference(images, num_classes, for_training=False, restore_logits=True,
   # Grab the logits associated with the side head. Employed during training.
   auxiliary_logits = endpoints['aux_logits']
 
+  return logits, auxiliary_logits
+
+
+def inference_endpoint(images, num_classes, for_training=False, restore_logits=True,
+              scope=None):
+  """Build Inception v3 model architecture.
+
+  See here for reference: http://arxiv.org/abs/1512.00567
+
+  Args:
+    images: Images returned from inputs() or distorted_inputs().
+    num_classes: number of classes
+    for_training: If set to `True`, build the inference model for training.
+      Kernels that operate differently for inference during training
+      e.g. dropout, are appropriately configured.
+    restore_logits: whether or not the logits layers should be restored.
+      Useful for fine-tuning a model with different num_classes.
+    scope: optional prefix string identifying the ImageNet tower.
+
+  Returns:
+    Logits. 2-D float Tensor.
+    Auxiliary Logits. 2-D float Tensor of side-head. Used for training only.
+  """
+  # Parameters for BatchNorm.
+  batch_norm_params = {
+      # Decay for the moving averages.
+      'decay': BATCHNORM_MOVING_AVERAGE_DECAY,
+      # epsilon to prevent 0s in variance.
+      'epsilon': 0.001,
+  }
+  # Set weight_decay for weights in Conv and FC layers.
+  with slim.arg_scope([slim.ops.conv2d, slim.ops.fc], weight_decay=0.00004):
+    with slim.arg_scope([slim.ops.conv2d],
+                        stddev=0.1,
+                        activation=tf.nn.relu,
+                        batch_norm_params=batch_norm_params):
+      logits, endpoints = slim.inception.inception_v3(
+          images,
+          dropout_keep_prob=0.8,
+          num_classes=num_classes,
+          is_training=for_training,
+          restore_logits=restore_logits,
+          scope=scope)
+
+  # Add summaries for viewing model statistics on TensorBoard.
+  _activation_summaries(endpoints)
+
+  # Grab the logits associated with the side head. Employed during training.
+  auxiliary_logits = endpoints['aux_logits']
+
   #return logits, auxiliary_logits
-  return logits, endpoints
+  #print("inference shape :%s "%(str(logits[0].shape)))
+  return endpoints
+
+
 
 
 def loss(logits, labels, batch_size=None):
@@ -123,6 +176,7 @@ def loss(logits, labels, batch_size=None):
                                     1.0, 0.0)
 
   # Cross entropy loss for the main softmax prediction.
+  #print("logits[0] :%s "%(str(logits[0].shape)))
   slim.losses.cross_entropy_loss(logits[0],
                                  dense_labels,
                                  label_smoothing=0.1,
