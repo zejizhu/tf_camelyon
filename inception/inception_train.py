@@ -110,7 +110,6 @@ def _tower_loss(images, labels, num_classes, scope, reuse_variables=None):
                                  restore_logits=restore_logits,
                                  scope=scope)
 
-  print("_tower_loss shape :%s " % (str(logits[0].shape)))
   # Build the portion of the Graph calculating the losses. Note that we will
   # assemble the total_loss using a custom function below.
   split_batch_size = images.get_shape().as_list()[0]
@@ -322,7 +321,7 @@ def train(dataset):
     sess.run(init)
 
     if FLAGS.pretrained_model_checkpoint_path:
-      assert tf.gfile.Exists(FLAGS.pretrained_model_checkpoint_path)
+      #assert tf.gfile.Exists(FLAGS.pretrained_model_checkpoint_path)
       variables_to_restore = tf.get_collection(
           slim.variables.VARIABLES_TO_RESTORE)
       restorer = tf.train.Saver(variables_to_restore)
@@ -356,7 +355,7 @@ def train(dataset):
         summary_writer.add_summary(summary_str, step)
 
       # Save the model checkpoint periodically.
-      if step % 5000 == 0 or (step + 1) == FLAGS.max_steps:
+      if step % 2500 == 0 or (step + 1) == FLAGS.max_steps:
         context_time=time.strftime("%m%d%H%M")
         model_name="model.ckpt-%s"%(context_time)
         checkpoint_path = os.path.join(FLAGS.train_dir, model_name)

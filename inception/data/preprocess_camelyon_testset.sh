@@ -26,13 +26,13 @@ CURRENT_DIR=$(pwd)
 #fi
 
 # Note the locations of the train and validation data.
-TRAIN_DIRECTORY="${SCRATCH_DIR}/train"
+TRAIN_DIRECTORY="${SCRATCH_DIR}/test"
 VALIDATION_DIRECTORY="${SCRATCH_DIR}/validation"
 
 # Expands the data into the flower_photos/ directory and rename it as the
 # train directory.
 #tar xf ${DATA_DIR}/flower_photos.tgz
-rm -rf "${TRAIN_DIRECTORY}" "${VALIDATION_DIRECTORY}"
+rm -rf "${TRAIN_DIRECTORY}"
 mkdir -p "${TRAIN_DIRECTORY}"
 mv ${DIR_RAW_DATA} ${TRAIN_DIRECTORY}
 #printf $strs

@@ -82,7 +82,8 @@ def save_csv(score,filenames):
             csv_path = os.path.join(FLAGS.csv_dir, fd_name)
             fd = open(csv_path, "ab+")
         #fd=open(csv_path,"ab+")
-        write_context = "%d,%d,%lf\n" %(coord_x,coord_y,score[i][2])
+        nscore = score[i][2]/(score[i][1]+score[i][2])
+        write_context = "%s,%d,%d,%lf\n" %(filenames[i],coord_x,coord_y,nscore)
         fd.write(write_context)
         #fd.close()
 

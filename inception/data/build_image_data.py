@@ -159,7 +159,11 @@ class ImageCoder(object):
 
   def __init__(self):
     # Create a single Session to run all image coding calls.
-    self._sess = tf.Session()
+    gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.01)
+    config=tf.ConfigProto(gpu_options=gpu_options)
+    config.gpu_options.allow_growth=True
+    self._sess = tf.Session(config=config)
+    #self._sess = tf.Session()
 
     # Initializes function that converts PNG to JPEG data.
     self._png_data = tf.placeholder(dtype=tf.string)

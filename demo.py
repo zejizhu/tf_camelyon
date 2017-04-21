@@ -22,7 +22,7 @@ def train_init():
     run = cfg.config_run()
     param = cfg.config_param()
 
-    FLAGS.train_dir = str(os.path.join(path.data_dir_top,path.train_dir))
+    FLAGS.train_dir = str(os.path.join(path.data_dir_top,path.models_dir))
     FLAGS.data_dir = str(os.path.join(path.data_dir_top,path.data_dir))
     FLAGS.fine_tune = param.fine_tune
     FLAGS.initial_learning_rate = param.init_learning_rate
@@ -51,6 +51,7 @@ def eval_init():
     FLAGS.batch_size = param.eval_batch_size
     FLAGS.num_gpus = param.gpu_num
     FLAGS.subset = str(run.mode)
+    FLAGS.run_once = param.test_run_once
     return 0
 
 def eval():
@@ -70,7 +71,7 @@ def test_init():
         print("creat the dir %s!" %(csv_path))
 
     FLAGS.test_dir = str(os.path.join(path.data_dir_top,path.test_dir))
-    FLAGS.data_dir = str(os.path.join(path.data_dir_top,path.data_dir))
+    FLAGS.data_dir = str(os.path.join(path.data_dir_top,path.test_data_dir))
     FLAGS.csv_dir = str(os.path.join(path.data_dir_top,path.csv_dir))
     FLAGS.checkpoint_dir = str(os.path.join(path.data_dir_top,path.models_dir))
     FLAGS.subset=str(run.mode)

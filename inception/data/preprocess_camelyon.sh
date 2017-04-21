@@ -68,7 +68,7 @@ python "${BUILD_SCRIPT}" \
   --validation_directory="${VALIDATION_DIRECTORY}" \
   --output_directory="${OUTPUT_DIRECTORY}" \
   --labels_file="${LABELS_FILE}" \
-  --data_mode =1 \
+  --data_mode=1 \
   --train_shards=128 \
   --validation_shards=32 \
   --num_threads=8
