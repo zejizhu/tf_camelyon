@@ -171,7 +171,8 @@ def test(dataset):
     # Number of classes in the Dataset label set plus 1.
     # Label 0 is reserved for an (unused) background class.
     num_classes = dataset.num_classes() + 1
-
+    #for i in range(FLAGS.num_gpus):
+    #with tf.device('/gpu:%d' % FLAGS.test_gpu_id):
     # Build a Graph that computes the logits predictions from the
     # inference model.
     endpoints = inception.inference_endpoint(images, num_classes)

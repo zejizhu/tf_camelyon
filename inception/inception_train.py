@@ -355,8 +355,9 @@ def train(dataset):
         summary_writer.add_summary(summary_str, step)
 
       # Save the model checkpoint periodically.
-      if step % 2500 == 0 or (step + 1) == FLAGS.max_steps:
-        context_time=time.strftime("%m%d%H%M")
-        model_name="model.ckpt-%s"%(context_time)
+      if step % 5000 == 0 or (step + 1) == FLAGS.max_steps:
+        #context_time=time.strftime("%m%d%H%M")
+        #model_name="model.ckpt-%s"%(context_time)
+        model_name = "model.ckpt-%s" %(FLAGS.method_name)
         checkpoint_path = os.path.join(FLAGS.train_dir, model_name)
         saver.save(sess, checkpoint_path, global_step=step)

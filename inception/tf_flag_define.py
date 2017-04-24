@@ -36,9 +36,20 @@ def init():
     tf.app.flags.DEFINE_string('subset', 'train',
                                """Either 'train' or 'validation'.""")
 
+    tf.app.flags.DEFINE_string('method_name', 'raw',
+                               """Either 'train' or 'validation'.""")
+
     # Flags governing the hardware employed for running TensorFlow.
     tf.app.flags.DEFINE_integer('num_gpus', 1,
                                 """How many GPUs to use.""")
+    tf.app.flags.DEFINE_integer('gpu_offset', 0,
+                                """How many GPUs to use.""")
+
+    tf.app.flags.DEFINE_integer('test_gpu_id', 0,
+                                """How many GPUs to use.""")
+    tf.app.flags.DEFINE_integer('eval_gpu_id', 0,
+                                """How many GPUs to use.""")
+
     tf.app.flags.DEFINE_boolean('log_device_placement', False,
                                 """Whether to log device placement.""")
 

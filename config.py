@@ -6,7 +6,8 @@ import sys
 
 class config_run():
     def __init__(self):
-        self.mode="test"
+        self.mode="validation"
+        self.method_name = "hsd2_no_distort"
 
 class config_path:
     def __init__(self):
@@ -16,10 +17,10 @@ class config_path:
         self.train_dir = "events/train/"
         self.eva_dir = "events/eval/"
         self.test_dir = "events/test/"
-        self.csv_dir = "csv_outs_hsd2"
         self.event_top_dir = "events"
+        self.save_models_dir = "models_hsd2_no_distort"
         self.models_dir = "models_hsd2_batch_128_bak"
-        self.model_checkpoint = "model.ckpt-04202236-110000"
+        self.model_checkpoint = "model.ckpt-04091946-150000"
         self.top_dir = sys.path[0]
         self.inception_dir = "inception"
 
@@ -33,13 +34,12 @@ class config_param:
         self.fine_tune =0
         self.eval_num_example=5952
         self.eval_batch_size = 32
-        self.test_num_example=2370610
-        self.test_run_once = 1
-        self.test_batch_size = 128
+
 
 ## TRAIN PARAM ##
-class train_param:
+class param_train:
     def __init__(self):
+        self.mode_name = "train"
         self.init_learning_rate = 0.01
         self.input_queue_memory_factor = 1
         self.max_step = 120000
@@ -50,27 +50,33 @@ class train_param:
         self.tfrecord_dir = "TFRecords_ALL"
 
 ## EVAL PARAM ##
-class eval_param:
+class param_eval:
     def __init__(self):
+        self.mode_name = "validation"
         self.input_queue_memory_factor = 1
-        self.num_example = 8192
+        self.num_example = 5952
         self.run_once = 1
         self.batch_size = 128
         self.gpu_num = 2
+        self.model_dir = "models_hsd2_no_distort_bak"
         self.event_dir = "eval_event"
-        self.tfrecord_dir = "TFRecords_ALL"
+        self.tfrecord_dir = "TFRecords_HSD2"
 
 ## TEST PARAM ##
-class test_param:
+class param_test:
     def __init__(self):
+        self.mode_name = "test"
         self.input_queue_memory_factor = 1
         self.num_example = 2370610
         self.run_once = 1
         self.batch_size = 128
-        self.gpu_num = 2
+        self.gpu_num = 1
+        self.gpu_id = 0
         self.event_dir = "test_event"
-        self.csv_outs = "csv_outs"
-        self.tfrecord_dir = "TFRecords_ALL"
+        self.csv_outs = "csv_outs_tf_hsd2_no_distort_11w"
+        self.tfrecord_dir = "TFRecords_HSD2"
+        self.model_dir = "models_hsd2_no_distort_bak"
+        self.model_name = "model.ckpt-hsd2_no_distort-110000"
 
 class config_const:
     def __init__(self):
